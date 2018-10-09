@@ -6,18 +6,21 @@ public class Node {
 
 	String name;
 	int duration;
-	ArrayList<String> dependencies = new ArrayList<String>();
+	ArrayList<String> dependencies;
+	ArrayList<Node> dependents;
 	
 	public Node() {
 		this.name = "";
 		this.duration = 0;
 		this.dependencies = new ArrayList<String>();
+		this.dependents = new ArrayList<Node>();
 	}
 	
-	public Node(String name, int duration, ArrayList<String> dependencies) {
+	public Node(String name, int duration, ArrayList<String> dependencies, ArrayList<Node> dependents) {
 		this.name = name;
 		this.duration = duration;
 		this.dependencies = dependencies;
+		this.dependents = dependents;
 	}
 	
 	//Getters
@@ -33,6 +36,10 @@ public class Node {
 		return dependencies;
 	}
 	
+	public ArrayList<Node> getDependents() {
+		return dependents;
+	}
+	
 	//Setters
 	public void setName(String name) {
 		this.name = name;
@@ -46,8 +53,12 @@ public class Node {
 		this.dependencies = dependencies;
 	}
 	
-	public void addDependencies(String dependency) {
-		this.dependencies.add(dependency);
+	public void addDependencies(String dependencies) {
+		this.dependencies.add(dependencies);
+	}
+	
+	public void addDependent(Node dependent) {
+		this.dependents.add(dependent);
 	}
 
 }
