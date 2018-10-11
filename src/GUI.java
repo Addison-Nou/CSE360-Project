@@ -10,6 +10,8 @@ import javax.swing.JTextArea;
 import javax.swing.JScrollBar;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class GUI {
 
@@ -54,11 +56,19 @@ public class GUI {
 		panel.setLayout(null);
 		
 		JButton button = new JButton("Help");
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {    //this is the button(action) that corresponds with the "Help" Button 
+			}                                                 //TODO add page for help section as the button action
+		});
 		button.setFont(new Font("Tahoma", Font.ITALIC, 12));
 		button.setBounds(295, 1, 62, 23);
 		panel.add(button);
 		
 		JButton button_1 = new JButton("About");
+		button_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {    //this is the button(action) that corresponds with the "About" Button 
+			}                                                 //TODO add page for about section as the button action
+		});
 		button_1.setFont(new Font("Tahoma", Font.ITALIC, 12));
 		button_1.setBounds(357, 1, 72, 23);
 		panel.add(button_1);
@@ -90,12 +100,20 @@ public class GUI {
 		panel.add(textArea_4);
 		
 		JButton btnProcess = new JButton("PROCESS");
+		btnProcess.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {    //this is the button(action) that corresponds with the "PROCESS" Button 
+			}
+		});
 		btnProcess.setHorizontalAlignment(SwingConstants.LEFT);
 		btnProcess.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnProcess.setBounds(10, 154, 95, 23);
 		panel.add(btnProcess);
 		
 		JButton btnAddNewPredecessors = new JButton("Add New Predecessors");
+		btnAddNewPredecessors.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {      //this is the button(action) that corresponds with the "Add new Predecessor" Button
+			}
+		});
 		btnAddNewPredecessors.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		btnAddNewPredecessors.setBounds(203, 199, 170, 23);
 		panel.add(btnAddNewPredecessors);
@@ -106,6 +124,10 @@ public class GUI {
 		panel.add(lblPredecessorList);
 		
 		JButton btnRestart = new JButton("RESTART");
+		btnRestart.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {     //this is the button(action) that corresponds with the "RESTART" Button 
+			}
+		});
 		btnRestart.setHorizontalAlignment(SwingConstants.LEFT);
 		btnRestart.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnRestart.setBounds(10, 187, 97, 23);
@@ -134,11 +156,19 @@ public class GUI {
 		panel_1.add(lblAc);
 		
 		JButton btnNewButton = new JButton("Help");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {      //this is the button(action) that corresponds with the "Help" Button
+			}                                                 //TODO add page for help section as the button action
+		});
 		btnNewButton.setFont(new Font("Tahoma", Font.ITALIC, 12));
 		btnNewButton.setBounds(295, -1, 62, 23);
 		panel_1.add(btnNewButton);
 		
 		JButton btnAbout = new JButton("About");
+		btnAbout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {      //this is the button(action) that corresponds with the "About" Button
+			}                                                 //TODO add page for about section as the button action
+		});
 		btnAbout.setFont(new Font("Tahoma", Font.ITALIC, 12));
 		btnAbout.setBounds(357, -1, 72, 23);
 		panel_1.add(btnAbout);
