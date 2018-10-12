@@ -4,21 +4,21 @@ import java.util.ArrayList;
 
 public class Path {
 	
-	ArrayList<String> Path;
+	ArrayList<Node> Path;
 	int PathDuration;
 	
 	public Path() {
-		Path = new ArrayList<String>();
+		Path = new ArrayList<Node>();
 		PathDuration = 0;
 	}
 	
-	public Path(ArrayList<String> Path, int PathDuration) {
+	public Path(ArrayList<Node> Path, int PathDuration) {
 		this.Path = Path;
 		this.PathDuration = PathDuration;
 	}
 	
 	//Getters
-	public ArrayList<String> getPath(){
+	public ArrayList<Node> getPath(){
 		return Path;
 	}
 	
@@ -26,8 +26,26 @@ public class Path {
 		return PathDuration;
 	}
 	
+	public int getSize() {
+		return this.Path.size();
+	}
+	
 	//Setters
-	public void addPath(String name) {
+	public void addPath(Node name) {
 		this.Path.add(name);
+	}
+	
+	public void calcDuration() {
+		for (int i = 0; i < this.Path.size(); i++) {
+			this.PathDuration += this.Path.get(i).getDuration();	
+		}
+	}
+	
+	public void setPath(ArrayList<Node> Path){
+		this.Path = Path;
+	}
+	
+	public void setDuration(int PathDuration) {
+		this.PathDuration = PathDuration;
 	}
 }

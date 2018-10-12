@@ -41,6 +41,10 @@ public class Node {
 	}
 	
 	//Setters
+	public void clearDependencies() {
+		this.dependencies.clear();
+	}
+	
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -50,7 +54,10 @@ public class Node {
 	}
 	
 	public void setDependencies(ArrayList<String> dependencies) {
-		this.dependencies = dependencies;
+		this.dependencies.clear();
+		for(int i=0; i<dependencies.size(); i++) {
+			this.dependencies.add(dependencies.get(i));
+		}
 	}
 	
 	public void addDependencies(String dependencies) {
@@ -60,5 +67,4 @@ public class Node {
 	public void addDependent(Node dependent) {
 		this.dependents.add(dependent);
 	}
-
 }
