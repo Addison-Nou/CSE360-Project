@@ -90,6 +90,12 @@ public class GUI {
 		AboutInput.setBounds(627, 1, 72, 23);
 		panel.add(AboutInput);
 		
+		JLabel error = new JLabel("");
+		error.setFont(new Font("Tahoma", Font.BOLD, 13));
+		error.setForeground(Color.RED);
+		error.setBounds(250, 300, 400, 20);
+		panel.add(error);
+		
 		JLabel lblActivityName = new JLabel("Activity Name");
 		lblActivityName.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblActivityName.setBounds(80, 40, 200, 25);
@@ -132,78 +138,119 @@ public class GUI {
     				}
     			}
     			
+    			//Checking for loops
+    			//Check the entire nodelist
+    			for (int i = 0; i < Nodelist.size(); i++) {
+    				
+    				Node node = Nodelist.get(i);
+    				
+    				for (int j = i+1; j < Nodelist.size(); j++) {
+    					if (node.getDependencies().contains(Nodelist.get(j).getName())) {
+    						
+    						if (Nodelist.get(j).getDependencies().contains(node.getName())) {
+    							error.setText("Error: Loop occured at nodes " + node.getName() + " and " + Nodelist.get(j).getName());
+    							System.out.println("Error: Loop occured at nodes " + node.getName() + " and " + Nodelist.get(j).getName());
+    						}
+    						
+    					}
+    				}
+    			}
+    			//If two nodes have dependencies of each other
+    			//print out error
+    			
     			//Search for head nodes
     			ArrayList<Node> heads = SearchForHeads(Nodelist);
-
-    			for (Node head : heads) {
-    				System.out.println("Looking at head: " + head.getName());
-    				
-    				Path visitedNodes = new Path();
-    				
-    				visitedNodes.addPath(head);
-    				
-    				ArrayList<Path> finalPath = new ArrayList<Path>();
-    				
-    				FindPaths(head, visitedNodes, finalPath);
-    				
-    				for (int i = 0; i < finalPath.size(); i++) {
-    					finalPath.get(i).calcDuration();
-    				}
-    				
-    				finalPaths.add(finalPath);
+    			boolean noFloatingNodes = true;
+    			
+    			for (Node headCheck : heads) {
+    				if (headCheck.getDependents().isEmpty())
+    					noFloatingNodes = false;
     			}
     			
-    			for (ArrayList<Path> finalPathArray : finalPaths) {
-    				for (int i = 0; i < finalPathArray.size(); i++) {
-    					for (int j = i+1; j < finalPathArray.size(); j++) {
-    						if (finalPathArray.get(i).getDuration() < finalPathArray.get(j).getDuration()) {
-    							Path temp = new Path();
-    							temp.setDuration(finalPathArray.get(i).getDuration());
-    							temp.setPath(finalPathArray.get(i).getPath());
-    							
-    							finalPathArray.get(i).setPath(finalPathArray.get(j).getPath());
-    							finalPathArray.get(i).setDuration(finalPathArray.get(j).getDuration());
-    							
-    							finalPathArray.get(j).setPath(temp.getPath());
-    							finalPathArray.get(j).setDuration(temp.getDuration());
-    						}
-    					}
+    			if (noFloatingNodes) {
+	    			for (Node head : heads) {
+	    				System.out.println("Looking at head: " + head.getName());
+	    				
+	    				Path visitedNodes = new Path();
+	    				
+	    				visitedNodes.addPath(head);
+	    				
+	    				ArrayList<Path> finalPath = new ArrayList<Path>();
+	    				
+	    				FindPaths(head, visitedNodes, finalPath);
+	    				
+	    				for (int i = 0; i < finalPath.size(); i++) {
+	    					finalPath.get(i).calcDuration();
+	    				}
+	    				
+	    				finalPaths.add(finalPath);
+	    			}
+    				
+        			//Organizing the paths based on duration
+        			for (ArrayList<Path> finalPathArray : finalPaths) {
+        				for (int i = 0; i < finalPathArray.size(); i++) {
+        					for (int j = i+1; j < finalPathArray.size(); j++) {
+        						if (finalPathArray.get(i).getDuration() < finalPathArray.get(j).getDuration()) {
+        							Path temp = new Path();
+        							temp.setDuration(finalPathArray.get(i).getDuration());
+        							temp.setPath(finalPathArray.get(i).getPath());
+        							
+        							finalPathArray.get(i).setPath(finalPathArray.get(j).getPath());
+        							finalPathArray.get(i).setDuration(finalPathArray.get(j).getDuration());
+        							
+        							finalPathArray.get(j).setPath(temp.getPath());
+        							finalPathArray.get(j).setDuration(temp.getDuration());
+        						}
+        					}
+        				}
+        			}
+        			
+        			//Outputting paths to console
+        			System.out.println("Paths: ");
+        			for (ArrayList<Path> finalPathArray : finalPaths) {
+        				for (Path finalPath : finalPathArray) {
+        					System.out.println(finalPath.getPath());
+        					System.out.println("Duration: " + finalPath.getDuration());
+        				}
+        			}
+        			
+        			//Clear output before writing to it
+        			ListArea.setText("");
+        			
+        			//Outputting paths to Output
+        			for (ArrayList<Path> finalPathArray : finalPaths) {
+        				for (Path finalPath : finalPathArray) {
+        					ListArea.append("[");
+        					for (int i = 0; i < finalPath.getPath().size(); i++) {
+        						ListArea.append(finalPath.getPath().get(i).getName());
+        						if (!(i == finalPath.getPath().size()-1))
+        							ListArea.append(", ");
+        					}
+        					ListArea.append("]");
+        					ListArea.append("\tDuration: " + finalPath.getDuration() + "\n");
+        				}
+        			}
+    				Nodelist.clear();
+    				PredecessorField.setText("");
+    				ActivityField.setText("");
+    				DurationField.setText("");
+    				for(int i = 0; i < finalPaths.size(); i++) {
+    					finalPaths.get(i).clear();
     				}
-    			}
-    			
-    			//Outputting paths to console
-    			System.out.println("Paths: ");
-    			for (ArrayList<Path> finalPathArray : finalPaths) {
-    				for (Path finalPath : finalPathArray) {
-    					System.out.println(finalPath.getPath());
-    					System.out.println("Duration: " + finalPath.getDuration());
+    				finalPaths.clear();
+    			} else {
+    				error.setText("Error: You have detached nodes!");
+    				Nodelist.clear();
+    				PredecessorField.setText("");
+    				ActivityField.setText("");
+    				DurationField.setText("");
+    				ListArea.setText("");
+    				for(int i = 0; i < finalPaths.size(); i++) {
+    					finalPaths.get(i).clear();
     				}
+    				finalPaths.clear();
+    				noFloatingNodes = true;
     			}
-    			
-    			//Clear output before writing to it
-    			ListArea.setText("");
-    			
-    			//Outputting paths to Output
-    			for (ArrayList<Path> finalPathArray : finalPaths) {
-    				for (Path finalPath : finalPathArray) {
-    					ListArea.append("[");
-    					for (int i = 0; i < finalPath.getPath().size(); i++) {
-    						ListArea.append(finalPath.getPath().get(i).getName());
-    						if (!(i == finalPath.getPath().size()-1))
-    							ListArea.append(", ");
-    					}
-    					ListArea.append("]");
-    					ListArea.append("\tDuration: " + finalPath.getDuration() + "\n");
-    				}
-    			}
-				Nodelist.clear();
-				PredecessorField.setText("");
-				ActivityField.setText("");
-				DurationField.setText("");
-				for(int i = 0; i < finalPaths.size(); i++) {
-					finalPaths.get(i).clear();
-				}
-				finalPaths.clear();
 			}
 		});
 		btnProcess.setFont(new Font("Tahoma", Font.BOLD, 15));
@@ -236,6 +283,7 @@ public class GUI {
 				PredecessorField.setText("");
 				ActivityField.setText("");
 				DurationField.setText("");
+				error.setText("");
 				for(int i = 0; i < finalPaths.size(); i++) {
 					finalPaths.get(i).clear();
 				}
@@ -254,6 +302,7 @@ public class GUI {
 		JButton btnNewButton_1 = new JButton("Add Node");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {			//this is the button(action) that corresponds with the "Add Node" Button
+				
 				if (isInteger(DurationField.getText())) {	//Check if text in DurationField is an integer
 					if (!ActivityField.getText().isEmpty()) {	//Checks to see if name field is empty
 						Node clone = new Node();
@@ -268,7 +317,13 @@ public class GUI {
 						holder.clearDependencies();
 						holder.setDuration(0);
 						holder.setName(null);
+						error.setText("");
+					} else {
+						error.setText("Error: Please input a name for the node");
 					}
+				} else {
+					error.setText("Error: Duration is not an integer");
+					System.out.println("Error: Duration is not an integer");
 				}
 			}
 		});
