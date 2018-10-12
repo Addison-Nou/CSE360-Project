@@ -186,10 +186,22 @@ public class GUI {
 	    				finalPaths.add(finalPath);
 	    			}
     				
+	    			//Creating new list of paths to sort
+	    			ArrayList<Path> sortedPath = new ArrayList<Path>();
+	    			
         			//Organizing the paths based on duration
         			for (ArrayList<Path> finalPathArray : finalPaths) {
+						System.out.println("Checking ArrayList of paths");
+						
         				for (int i = 0; i < finalPathArray.size(); i++) {
-        					for (int j = i+1; j < finalPathArray.size(); j++) {
+        					System.out.println("Checking Path: finalPathArraySize = " + finalPathArray.size());
+        					System.out.println("finalPaths = " + finalPaths.size());
+        					sortedPath.add(finalPathArray.get(i));
+        					/*for (int j = i+1; j < finalPathArray.size(); j++) {
+        						
+        						System.out.println("finalPathArray[i] = " + finalPathArray.get(i).getDuration());
+        						System.out.println("finalPathArray[j] = " + finalPathArray.get(j).getDuration());
+        						
         						if (finalPathArray.get(i).getDuration() < finalPathArray.get(j).getDuration()) {
         							Path temp = new Path();
         							temp.setDuration(finalPathArray.get(i).getDuration());
@@ -201,22 +213,49 @@ public class GUI {
         							finalPathArray.get(j).setPath(temp.getPath());
         							finalPathArray.get(j).setDuration(temp.getDuration());
         						}
-        					}
+        						
+        					}*/
+        				}
+        			}
+        			
+        			for (int i = 0; i < sortedPath.size(); i++) {
+        				for (int j = i+1; j < sortedPath.size(); j++) {
+    						if (sortedPath.get(i).getDuration() < sortedPath.get(j).getDuration()) {
+            					System.out.println("Path " + sortedPath.get(i) + " (duration = " + sortedPath.get(i).getDuration() + ") is less than path " + sortedPath.get(j) + " (duration = " + sortedPath.get(j).getDuration() + ")");
+    							
+            					Path temp = new Path();
+    							temp.setDuration(sortedPath.get(i).getDuration());
+    							temp.setPath(sortedPath.get(i).getPath());
+    							
+    							sortedPath.get(i).setPath(sortedPath.get(j).getPath());
+    							sortedPath.get(i).setDuration(sortedPath.get(j).getDuration());
+    							
+    							sortedPath.get(j).setPath(temp.getPath());
+    							sortedPath.get(j).setDuration(temp.getDuration());
+    						} else {
+            					System.out.println("Path " + sortedPath.get(i) + " (duration = " + sortedPath.get(i).getDuration() + ") is more than path " + sortedPath.get(j) + " (duration = " + sortedPath.get(j).getDuration() + ")");
+    						}
         				}
         			}
         			
         			//Outputting paths to console
         			System.out.println("Paths: ");
+        			/*
         			for (ArrayList<Path> finalPathArray : finalPaths) {
         				for (Path finalPath : finalPathArray) {
         					System.out.println(finalPath.getPath());
         					System.out.println("Duration: " + finalPath.getDuration());
         				}
+        			}*/
+        			System.out.println("Paths: ");
+        			for (Path path : sortedPath) {
+        				System.out.println(path.getDuration());
         			}
         			
         			//Clear output before writing to it
         			ListArea.setText("");
         			
+        			/*
         			//Outputting paths to Output
         			for (ArrayList<Path> finalPathArray : finalPaths) {
         				for (Path finalPath : finalPathArray) {
@@ -229,7 +268,19 @@ public class GUI {
         					ListArea.append("]");
         					ListArea.append("\tDuration: " + finalPath.getDuration() + "\n");
         				}
-        			}
+        			}*/
+        			
+        			for (Path finalPath : sortedPath) {
+    					ListArea.append("[");
+    					for (int i = 0; i < finalPath.getPath().size(); i++) {
+    						ListArea.append(finalPath.getPath().get(i).getName());
+    						if (!(i == finalPath.getPath().size()-1))
+    							ListArea.append(", ");
+    					}
+    					ListArea.append("]");
+    					ListArea.append("\tDuration: " + finalPath.getDuration() + "\n");
+    				}
+        			
     				Nodelist.clear();
     				PredecessorField.setText("");
     				ActivityField.setText("");
@@ -267,7 +318,7 @@ public class GUI {
 			}
 		});
 		btnAddNewPredecessors.setFont(new Font("Tahoma", Font.BOLD, 15));
-		btnAddNewPredecessors.setBounds(420, 150, 170, 25);
+		btnAddNewPredecessors.setBounds(420, 150, 200, 25);
 		panel.add(btnAddNewPredecessors);
 		
 		JLabel lblPredecessorList = new JLabel("Predecessor");
