@@ -1,0 +1,53 @@
+[33mcommit 8846000348948c5facb772f8ad3e657f60d0d298[m[33m ([m[1;36mHEAD -> [m[1;32mv2[m[33m)[m
+Author: TheGreatLibrary <nouaddison@gmail.com>
+Date:   Wed Oct 24 16:59:08 2018 -0700
+
+    Initial commit to branch 'v2'
+
+[33mcommit 9c58335f52329c07aacfbda2c3cf10f7516640b7[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m
+Author: TheGreatLibrary <nouaddison@gmail.com>
+Date:   Fri Oct 12 15:36:34 2018 -0700
+
+    Fixed duration ordering method
+
+[33mcommit 62f380efb53b809b1544ad3b90337779dc6978c1[m
+Author: TheGreatLibrary <nouaddison@gmail.com>
+Date:   Fri Oct 12 14:38:44 2018 -0700
+
+    Finished programming error checks
+
+[33mcommit a73fcc31a917c1813f57ef3406c5ea744e4f6c21[m
+Author: TheGreatLibrary <nouaddison@gmail.com>
+Date:   Fri Oct 12 13:22:13 2018 -0700
+
+    Added functionality to GUI
+
+[33mcommit 8461b8c61029e8e10ed323178a22fd9c872978fd[m
+Author: TheGreatLibrary <nouaddison@gmail.com>
+Date:   Tue Oct 9 16:38:46 2018 -0700
+
+    Finished FindPaths function via 'dependent nodes' method; implemented in testcase for error checking
+
+[33mcommit 78baab8bf1556223a870f56ed5d1bcef2dc9c191[m
+Author: DESKTOP-77V002R\conno <caweese@asu.edu>
+Date:   Mon Oct 8 14:35:54 2018 -0700
+
+    Added the SearchForHead and SearchForDependencies function, as well as added setters to the Node class and a few other fixes to the Main
+
+[33mcommit ca1b2f129c2e76d1ad190f1a4c8bc4ef793204ad[m
+Author: DESKTOP-77V002R\conno <caweese@asu.edu>
+Date:   Mon Oct 8 14:18:50 2018 -0700
+
+    Added the SearchForHead and SearchForDependencies function, as well as adding setters to the Node class and other fixes to the Main class
+
+[33mcommit 35622a489d6780868730888526f673b58407bdd2[m
+Author: TheGreatLibrary <nouaddison@gmail.com>
+Date:   Sun Oct 7 21:50:02 2018 -0700
+
+    Added node and path data structures; created console 'main' program for testing
+
+[33mcommit 1929d66a30388a268c44c6c4227470530b9643ec[m
+Author: caweese <43891204+caweese@users.noreply.github.com>
+Date:   Sat Oct 6 23:34:56 2018 -0700
+
+    Initial commit

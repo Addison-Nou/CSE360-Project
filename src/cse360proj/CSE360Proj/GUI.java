@@ -167,7 +167,10 @@ public class GUI {
     					noFloatingNodes = false;
     			}
     			
+    			//If there are no floating node heads, then then continue with the program
     			if (noFloatingNodes) {
+    				
+    				//Finding head nodes within nodelist
 	    			for (Node head : heads) {
 	    				System.out.println("Looking at head: " + head.getName());
 	    				
@@ -197,24 +200,6 @@ public class GUI {
         					System.out.println("Checking Path: finalPathArraySize = " + finalPathArray.size());
         					System.out.println("finalPaths = " + finalPaths.size());
         					sortedPath.add(finalPathArray.get(i));
-        					/*for (int j = i+1; j < finalPathArray.size(); j++) {
-        						
-        						System.out.println("finalPathArray[i] = " + finalPathArray.get(i).getDuration());
-        						System.out.println("finalPathArray[j] = " + finalPathArray.get(j).getDuration());
-        						
-        						if (finalPathArray.get(i).getDuration() < finalPathArray.get(j).getDuration()) {
-        							Path temp = new Path();
-        							temp.setDuration(finalPathArray.get(i).getDuration());
-        							temp.setPath(finalPathArray.get(i).getPath());
-        							
-        							finalPathArray.get(i).setPath(finalPathArray.get(j).getPath());
-        							finalPathArray.get(i).setDuration(finalPathArray.get(j).getDuration());
-        							
-        							finalPathArray.get(j).setPath(temp.getPath());
-        							finalPathArray.get(j).setDuration(temp.getDuration());
-        						}
-        						
-        					}*/
         				}
         			}
         			
@@ -255,10 +240,9 @@ public class GUI {
         			//Clear output before writing to it
         			ListArea.setText("");
         			
-        			/*
-        			//Outputting paths to Output
-        			for (ArrayList<Path> finalPathArray : finalPaths) {
-        				for (Path finalPath : finalPathArray) {
+        			//If checkbox 'critical-path-only' is false
+        			if (!criticalPathOnly) {
+            			for (Path finalPath : sortedPath) {
         					ListArea.append("[");
         					for (int i = 0; i < finalPath.getPath().size(); i++) {
         						ListArea.append(finalPath.getPath().get(i).getName());
@@ -268,19 +252,26 @@ public class GUI {
         					ListArea.append("]");
         					ListArea.append("\tDuration: " + finalPath.getDuration() + "\n");
         				}
-        			}*/
+        			} else {	//Critical path only is selected; only print the critical paths (i.e. path(s) with highest duration)
+        				int criticalPathDuration = sortedPath.get(1).getDuration();	//Grab the first final Path's duration from the sorted paths
+        				ListArea.append("Critical Path(s):\n");
+            			for (Path finalPath : sortedPath) {
+            				if (finalPath.getDuration() == (criticalPathDuration)) {
+            					ListArea.append("[");
+            					for (int i = 0; i < finalPath.getPath().size(); i++) {		//For each final path
+            						ListArea.append(finalPath.getPath().get(i).getName());	//Print out the name for each node in the final path
+            						if (!(i == finalPath.getPath().size()-1))				//If we haven't reached the end of the list of nodes in the path
+            							ListArea.append(", ");								//Add a comma for formatting and continue the for loop
+            					}
+            					ListArea.append("]");
+            					ListArea.append("\tDuration: " + finalPath.getDuration() + "\n");
+            				}
+        				}
+        			}
+
         			
-        			for (Path finalPath : sortedPath) {
-    					ListArea.append("[");
-    					for (int i = 0; i < finalPath.getPath().size(); i++) {
-    						ListArea.append(finalPath.getPath().get(i).getName());
-    						if (!(i == finalPath.getPath().size()-1))
-    							ListArea.append(", ");
-    					}
-    					ListArea.append("]");
-    					ListArea.append("\tDuration: " + finalPath.getDuration() + "\n");
-    				}
-        			
+        			//Clearing nodelist; legacy code as of branch v2; 10/24/18
+        			/*
     				Nodelist.clear();
     				PredecessorField.setText("");
     				ActivityField.setText("");
@@ -288,9 +279,13 @@ public class GUI {
     				for(int i = 0; i < finalPaths.size(); i++) {
     					finalPaths.get(i).clear();
     				}
-    				finalPaths.clear();
+    				finalPaths.clear();*/
+        			
+        			//There are floating head nodes
     			} else {
     				error.setText("Error: You have detached nodes!");
+    				
+    				//Clear nodelist for new inputs
     				Nodelist.clear();
     				PredecessorField.setText("");
     				ActivityField.setText("");
