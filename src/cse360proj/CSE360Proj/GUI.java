@@ -23,6 +23,7 @@ import javax.swing.border.LineBorder;
 import java.awt.Color;
 import javax.swing.JTextField;
 import javax.swing.DropMode;
+import javax.swing.JCheckBox;
 
 public class GUI {
 
@@ -30,6 +31,7 @@ public class GUI {
 	private JTextField PredecessorField;
 	private JTextField ActivityField;
 	private JTextField DurationField;
+	private Boolean criticalPathOnly=false;
 	ArrayList<Node> Nodelist = new ArrayList<Node>();
 	ArrayList<ArrayList<Path>> finalPaths = new ArrayList<ArrayList<Path>>();
 
@@ -394,6 +396,24 @@ public class GUI {
 		DurationField.setBounds(80, 150, 150, 25);
 		panel.add(DurationField);
 		DurationField.setColumns(10);
+		
+		//----Critical path check box----\\
+		
+		JCheckBox chckbxCriticalPathOnly = new JCheckBox("Critical Path Only");
+		chckbxCriticalPathOnly.setFont(new Font("Tahoma", Font.BOLD, 13));
+		chckbxCriticalPathOnly.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(chckbxCriticalPathOnly.isSelected()) { //checks to see if box is checked(if so sets true, else sets false)
+					criticalPathOnly=true;
+				}
+				else {
+					criticalPathOnly=false;
+				}
+					
+			}
+		});
+		chckbxCriticalPathOnly.setBounds(200, 360, 350, 25);
+		panel.add(chckbxCriticalPathOnly);
 		
 		JLabel lblActivityList = new JLabel("Activity List");
 		lblActivityList.setFont(new Font("Tahoma", Font.BOLD, 15));
