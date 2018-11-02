@@ -33,6 +33,8 @@ public class GUI {
 	private JTextField DurationField;
 	private Boolean criticalPathOnly=false;
 	ArrayList<Node> Nodelist = new ArrayList<Node>();
+	
+	//Creating list of final paths
 	ArrayList<ArrayList<Path>> finalPaths = new ArrayList<ArrayList<Path>>();
 
 	/**
@@ -130,12 +132,35 @@ public class GUI {
     			//Give dependents to all nodes in nodelist
     			for (int i = 0; i < Nodelist.size(); i++) {
     				Node node = Nodelist.get(i);
+					System.out.println("Checking node: " + node.getName());
     				for (int j = 0; j < Nodelist.size(); j++) {
-    					//If the node's dependencies contains 
+    					//If the node's dependencies contains the dependency
+    					System.out.println("Comparing node: " + node.getName() + " to node: " + Nodelist.get(j).getName());
     					if (node.getDependencies().contains(Nodelist.get(j).getName())) {
-    						System.out.println("Node dependency added to " + Nodelist.get(j).getName());
-    						Nodelist.get(j).addDependent(node);
-    						//System.out.println("Node " + N.get(j).getName() + "'s new dependent list: " + N.get(j).getDependents());
+        					
+    						System.out.println("Node dependency found, checking node: " + Nodelist.get(j).getName() + " for copy of: " + Nodelist.get(i).getName());
+    						
+    						boolean goAhead = true;
+
+    						System.out.println("Size of " + Nodelist.get(j).getName() + "'s dependent list: " + node.getDependents().size());
+    						
+    						//Checking if the node's dependent list already contains the dependency
+    						//for (int k = 0; k < node.getDependents().size(); k++) {
+    						for (Node dependent : Nodelist.get(j).getDependents()) {
+    							System.out.println("Entered K loop");
+    							System.out.println("Checking " + dependent.getName() + " = " + Nodelist.get(i).getName() + ": " + dependent.getName().equals(Nodelist.get(j).getName()));
+    							if (dependent.getName().equals(Nodelist.get(i).getName())){
+            						goAhead = false;
+            						System.out.println("Node dependent copy in " + Nodelist.get(j).getName() + "found for: " + Nodelist.get(i).getName());
+            						//System.out.println("Node " + N.get(j).getName() + "'s new dependent list: " + N.get(j).getDependents());
+    							}
+    						}
+    						//comparing to wrong node
+    						
+							if (goAhead) {
+								System.out.println("Node dependency added to " + Nodelist.get(j).getName());
+        						Nodelist.get(j).addDependent(node);
+							}
     					}
     				}
     			}
@@ -144,7 +169,7 @@ public class GUI {
     			//Check the entire nodelist
     			for (int i = 0; i < Nodelist.size(); i++) {
     				
-    				Node node = Nodelist.get(i);
+        			Node node = Nodelist.get(i);
     				
     				for (int j = i+1; j < Nodelist.size(); j++) {
     					if (node.getDependencies().contains(Nodelist.get(j).getName())) {
@@ -153,7 +178,6 @@ public class GUI {
     							error.setText("Error: Loop occured at nodes " + node.getName() + " and " + Nodelist.get(j).getName());
     							System.out.println("Error: Loop occured at nodes " + node.getName() + " and " + Nodelist.get(j).getName());
     						}
-    						
     					}
     				}
     			}
@@ -161,7 +185,17 @@ public class GUI {
     			//print out error
     			
     			//Search for head nodes
-    			ArrayList<Node> heads = SearchForHeads(Nodelist);
+    			ArrayList<Node> heads = new ArrayList<Node>();
+    			heads = SearchForHeads(Nodelist);
+    			
+    			for (Node head : heads) {
+    				System.out.print("Dependent(s) for node " + head.getName() + ": ");
+    				for (Node dependent : head.getDependents()) {
+    					System.out.print(dependent.getName() + ", ");
+    				}
+    			}
+    			System.out.println();
+    			
     			boolean noFloatingNodes = true;
     			
     			for (Node headCheck : heads) {
@@ -173,6 +207,8 @@ public class GUI {
     			if (noFloatingNodes) {
     				
     				//Finding head nodes within nodelist
+    				System.out.println("Number of heads: " + heads.size());
+    				
 	    			for (Node head : heads) {
 	    				System.out.println("Looking at head: " + head.getName());
 	    				
@@ -189,6 +225,10 @@ public class GUI {
 	    				}
 	    				
 	    				finalPaths.add(finalPath);
+	    				
+	    				System.out.println("Path added for: " + head.getName());
+	    				System.out.println("Path: " + finalPath.toString());
+	    				System.out.println("Total number of paths: " + finalPaths.size());
 	    			}
     				
 	    			//Creating new list of paths to sort
@@ -270,14 +310,25 @@ public class GUI {
             				}
         				}
         			}
-
+        			
+        			
+        			for (ArrayList<Path> finalPathArray : finalPaths) {
+						System.out.println("Resetting finalPaths");
+        				for (int i = 0; i < finalPathArray.size(); i++) {
+        					finalPathArray.remove(i);
+        				}
+        				finalPathArray.clear();
+        			}
+        			finalPaths.clear();
         			
         			//Clearing nodelist; legacy code as of branch v2; 10/24/18
-        			/*
-    				Nodelist.clear();
+        			
+    				//Nodelist.clear();
     				PredecessorField.setText("");
     				ActivityField.setText("");
     				DurationField.setText("");
+    				
+    				/*
     				for(int i = 0; i < finalPaths.size(); i++) {
     					finalPaths.get(i).clear();
     				}
@@ -290,7 +341,7 @@ public class GUI {
     				//Clear nodelist for new inputs
     				Nodelist.clear();
     				PredecessorField.setText("");
-    				ActivityField.setText("");
+    				ActivityField.setText("");System.out.println("Total number of paths: " + finalPaths.size());
     				DurationField.setText("");
     				ListArea.setText("");
     				for(int i = 0; i < finalPaths.size(); i++) {
@@ -332,10 +383,10 @@ public class GUI {
 				ActivityField.setText("");
 				DurationField.setText("");
 				error.setText("");
-				for(int i = 0; i < finalPaths.size(); i++) {
+				/*for(int i = 0; i < finalPaths.size(); i++) {
 					finalPaths.get(i).clear();
 				}
-				finalPaths.clear();
+				finalPaths.clear();*/
 			}
 		});
 		btnRestart.setFont(new Font("Tahoma", Font.BOLD, 15));
