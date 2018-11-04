@@ -36,6 +36,9 @@ public class GUI {
 	
 	//Creating list of final paths
 	ArrayList<ArrayList<Path>> finalPaths = new ArrayList<ArrayList<Path>>();
+	private JTextField chgDurField;
+	private JTextField NewDurField;
+	private JTextField textField;
 
 	/**
 	 * Create the application.
@@ -97,7 +100,7 @@ public class GUI {
 		JLabel error = new JLabel("");
 		error.setFont(new Font("Tahoma", Font.BOLD, 13));
 		error.setForeground(Color.RED);
-		error.setBounds(250, 300, 400, 20);
+		error.setBounds(200, 300, 400, 20);
 		panel.add(error);
 		
 		JLabel lblActivityName = new JLabel("Activity Name");
@@ -501,6 +504,148 @@ public class GUI {
 		AboutOutput.setFont(new Font("Tahoma", Font.ITALIC, 12));
 		AboutOutput.setBounds(627, -1, 72, 23);
 		panel_1.add(AboutOutput);
+		
+		JPanel panel_2 = new JPanel();
+		tabbedPane.addTab("Edit Duration", null, panel_2, null);
+		panel_2.setLayout(null);
+		
+		JButton HelpED = new JButton("Help");
+		HelpED.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {         	//this is the button(action) that corresponds with the "Help" Button
+				JOptionPane.showMessageDialog(null, 
+						"\t\tHELP\t\t\n"
+						+ "The Application can be exited by the red X in the upper right corner\n"
+						+ "The \"Add Predecessor\" button adds a predecessor to the current node\n"
+						+ "The \"Add Node\" button  takes the Activity Name and Duration and creates a new node\n"
+						+ "The \"Process\" button creates paths based on existing nodes\n"
+						+ "The \"Restart\" button resets the application to a blank slate");    	//help copy pasta
+			}                                                    	//TODO add filler text to the Pop-up as the button action
+		});
+		HelpED.setBounds(565, -1, 62, 23);
+		HelpED.setFont(new Font("Tahoma", Font.ITALIC, 12));
+		panel_2.add(HelpED);
+		
+		JButton AboutED = new JButton("About");
+		AboutED.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {         	//this is the button(action) that corresponds with the "About" Button
+				JOptionPane.showMessageDialog(null, 
+						"Authors: Addison Nou, Connor Weese, Muhammed Kilig, Zachary Somers\n"
+						+ "This program analyzes a given network diagram and determines all paths within the network.\n"
+						+ "It recieves input of Activity Name, Duration and List of Predecessors with no limit to activities or predecessors.\n"
+						+ "It ouputs a list of activity paths and durations listed in descending order according to the value durations.\n"
+						+ "CSE 360 Fall 2018");    	//about copy pasta
+			}                                                    	//TODO add filler text to the Pop-up as the button action
+		});
+		AboutED.setBounds(627, -1, 72, 23);
+		AboutED.setFont(new Font("Tahoma", Font.ITALIC, 12));
+		panel_2.add(AboutED);
+		
+		chgDurField = new JTextField();
+		chgDurField.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		chgDurField.setColumns(10);
+		chgDurField.setBounds(80, 70, 150, 25);
+		panel_2.add(chgDurField);
+		
+		JLabel Node2Chg = new JLabel("Node Name");
+		Node2Chg.setFont(new Font("Tahoma", Font.BOLD, 13));
+		Node2Chg.setBounds(80, 37, 200, 25);
+		panel_2.add(Node2Chg);
+		
+		NewDurField = new JTextField();
+		NewDurField.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		NewDurField.setColumns(10);
+		NewDurField.setBounds(80, 165, 150, 25);
+		panel_2.add(NewDurField);
+		
+		JLabel lblNewDuration = new JLabel("New Duration");
+		lblNewDuration.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lblNewDuration.setBounds(80, 127, 200, 25);
+		panel_2.add(lblNewDuration);
+		
+		JButton ReProcessbutton = new JButton("RE-PROCESS");
+		ReProcessbutton.addActionListener(new ActionListener() {	//Action listener for Re-Process Button TODO backend
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		ReProcessbutton.setFont(new Font("Tahoma", Font.BOLD, 15));
+		ReProcessbutton.setBounds(200, 325, 300, 35);
+		panel_2.add(ReProcessbutton);
+		
+		JLabel EDerrorLabel = new JLabel("");
+		EDerrorLabel.setForeground(Color.RED);
+		EDerrorLabel.setFont(new Font("Tahoma", Font.BOLD, 13));
+		EDerrorLabel.setBounds(200, 300, 400, 20);
+		panel_2.add(EDerrorLabel);
+		
+		JPanel panel_3 = new JPanel();
+		tabbedPane.addTab("Create Report", null, panel_3, null);
+		panel_3.setLayout(null);
+		
+		JButton HelpCR = new JButton("Help");
+		HelpCR.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {         	//this is the button(action) that corresponds with the "Help" Button
+				JOptionPane.showMessageDialog(null, 
+						"\t\tHELP\t\t\n"
+						+ "The Application can be exited by the red X in the upper right corner\n"
+						+ "The \"Add Predecessor\" button adds a predecessor to the current node\n"
+						+ "The \"Add Node\" button  takes the Activity Name and Duration and creates a new node\n"
+						+ "The \"Process\" button creates paths based on existing nodes\n"
+						+ "The \"Restart\" button resets the application to a blank slate");    	//help copy pasta
+			}                                                    	//TODO add filler text to the Pop-up as the button action
+		});
+		HelpCR.setBounds(565, -1, 62, 23);
+		HelpCR.setFont(new Font("Tahoma", Font.ITALIC, 12));
+		panel_3.add(HelpCR);
+		
+		JButton AboutCR = new JButton("About");
+		AboutCR.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {         	//this is the button(action) that corresponds with the "About" Button
+				JOptionPane.showMessageDialog(null, 
+						"Authors: Addison Nou, Connor Weese, Muhammed Kilig, Zachary Somers\n"
+						+ "This program analyzes a given network diagram and determines all paths within the network.\n"
+						+ "It recieves input of Activity Name, Duration and List of Predecessors with no limit to activities or predecessors.\n"
+						+ "It ouputs a list of activity paths and durations listed in descending order according to the value durations.\n"
+						+ "CSE 360 Fall 2018");    	//about copy pasta
+			}                                                    	//TODO add filler text to the Pop-up as the button action
+		});
+		AboutCR.setBounds(627, -1, 72, 23);
+		AboutCR.setFont(new Font("Tahoma", Font.ITALIC, 12));
+		panel_3.add(AboutCR);
+		
+		JButton reportGenbutton = new JButton("Generate Report");
+		reportGenbutton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {			//Action Listener for Generate Report Button TODO backend
+			}
+		});
+		reportGenbutton.setFont(new Font("Tahoma", Font.BOLD, 15));
+		reportGenbutton.setBounds(200, 325, 300, 35);
+		panel_3.add(reportGenbutton);
+		
+		textField = new JTextField();
+		textField.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		textField.setColumns(10);
+		textField.setBounds(200, 150, 300, 25);
+		panel_3.add(textField);
+		
+		JLabel reportNamelabel = new JLabel("Report Name");
+		reportNamelabel.setFont(new Font("Tahoma", Font.BOLD, 13));
+		reportNamelabel.setBounds(200, 110, 200, 25);
+		panel_3.add(reportNamelabel);
+		
+		JLabel CRerrorLabel = new JLabel("");
+		CRerrorLabel.setForeground(Color.RED);
+		CRerrorLabel.setFont(new Font("Tahoma", Font.BOLD, 13));
+		CRerrorLabel.setBounds(200, 300, 400, 20);
+		panel_3.add(CRerrorLabel);
 		
 		
 	}
