@@ -298,7 +298,8 @@ public class GUI {
         					ListArea.append("\tDuration: " + finalPath.getDuration() + "\n");
         				}
         			} else {	//Critical path only is selected; only print the critical paths (i.e. path(s) with highest duration)
-        				int criticalPathDuration = sortedPath.get(1).getDuration();	//Grab the first final Path's duration from the sorted paths
+        				int criticalPathDuration = sortedPath.get(0).getDuration();	//Grab the first final Path's duration from the sorted paths
+        				System.out.println("Critical Path Duration: " + criticalPathDuration);
         				ListArea.append("Critical Path(s):\n");
             			for (Path finalPath : sortedPath) {
             				if (finalPath.getDuration() == (criticalPathDuration)) {
