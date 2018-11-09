@@ -33,6 +33,9 @@ public class GUI {
 	private JTextField DurationField;
 	private Boolean criticalPathOnly=false;
 	ArrayList<Node> Nodelist = new ArrayList<Node>();
+	private String nodeNameCheck = "";
+	private int nodeDurationCheck = 0;
+	ArrayList<Path> sortedPath = new ArrayList<Path>();
 	
 	//Creating list of final paths
 	ArrayList<ArrayList<Path>> finalPaths = new ArrayList<ArrayList<Path>>();
@@ -131,7 +134,7 @@ public class GUI {
 		JButton btnProcess = new JButton("PROCESS");
 		btnProcess.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {			//this is the button(action) that corresponds with the "PROCESS" Button 
-				
+				sortedPath.clear();
     			//Give dependents to all nodes in nodelist
     			for (int i = 0; i < Nodelist.size(); i++) {
     				Node node = Nodelist.get(i);
@@ -235,7 +238,7 @@ public class GUI {
 	    			}
     				
 	    			//Creating new list of paths to sort
-	    			ArrayList<Path> sortedPath = new ArrayList<Path>();
+	    			
 	    			
         			//Organizing the paths based on duration
         			for (ArrayList<Path> finalPathArray : finalPaths) {
@@ -569,20 +572,200 @@ public class GUI {
 		lblNewDuration.setBounds(80, 127, 200, 25);
 		panel_2.add(lblNewDuration);
 		
+		//Changed the location of the EDerrorLabel so it could be actually used by the re-preocess button
+		JLabel EDerrorLabel = new JLabel("");
+		EDerrorLabel.setForeground(Color.RED);
+		EDerrorLabel.setFont(new Font("Tahoma", Font.BOLD, 13));
+		EDerrorLabel.setBounds(200, 300, 400, 20);
+		panel_2.add(EDerrorLabel);
+		
 		JButton ReProcessbutton = new JButton("RE-PROCESS");
-		ReProcessbutton.addActionListener(new ActionListener() {	//Action listener for Re-Process Button TODO backend
+		ReProcessbutton.addActionListener(new ActionListener() {	//Action listener for Re-Process Button
 			public void actionPerformed(ActionEvent e) {
+				if(!isInteger(NewDurField.getText())) {
+					EDerrorLabel.setText("Please input a valid duration");
+				}
+				else {
+					sortedPath.clear();
+					nodeNameCheck = chgDurField.getText();
+					nodeDurationCheck = Integer.parseInt(NewDurField.getText());
+					int checkFlag = changeDurationCheck(Nodelist, nodeNameCheck, nodeDurationCheck);
+					
+					/*****************************************************************
+					 0 = no error
+					 1 = new duration either 0 or a negative number; i.e. a non valid input
+					 2 = new duration is the same as the current duration
+					 3 = node name does not exist in the nodeList
+					 ****************************************************************/
+					
+					switch(checkFlag) {
+					case 0:
+						chgDurField.setText("");
+						NewDurField.setText("");
+						EDerrorLabel.setText("");
+						changeNodeDuration(Nodelist, nodeNameCheck, nodeDurationCheck);
+						
+						//the following long block of code is taken directly from the PROCESS button's code
+						
+						
+		    			//Search for head nodes
+		    			ArrayList<Node> heads = new ArrayList<Node>();
+		    			heads = SearchForHeads(Nodelist);
+		    			
+		    			for (Node head : heads) {
+		    				System.out.print("Dependent(s) for node " + head.getName() + ": ");
+		    				for (Node dependent : head.getDependents()) {
+		    					System.out.print(dependent.getName() + ", ");
+		    				}
+		    			}
+		    			System.out.println();
+		    			
+		    			boolean noFloatingNodes = true;
+		    			
+		    			for (Node headCheck : heads) {
+		    				if (headCheck.getDependents().isEmpty())
+		    					noFloatingNodes = false;
+		    			}
+		    			
+		    			//If there are no floating node heads, then then continue with the program
+		    			if (noFloatingNodes) {
+		    				
+		    				//Finding head nodes within nodelist
+		    				System.out.println("Number of heads: " + heads.size());
+		    				
+			    			for (Node head : heads) {
+			    				System.out.println("Looking at head: " + head.getName());
+			    				
+			    				Path visitedNodes = new Path();
+			    				
+			    				visitedNodes.addPath(head);
+			    				
+			    				ArrayList<Path> finalPath = new ArrayList<Path>();
+			    				
+			    				FindPaths(head, visitedNodes, finalPath);
+			    				
+			    				for (int i = 0; i < finalPath.size(); i++) {
+			    					finalPath.get(i).calcDuration();
+			    				}
+			    				
+			    				finalPaths.add(finalPath);
+			    				
+			    				System.out.println("Path added for: " + head.getName());
+			    				System.out.println("Path: " + finalPath.toString());
+			    				System.out.println("Total number of paths: " + finalPaths.size());
+			    			}
+			    			
+		        			//Organizing the paths based on duration
+		        			for (ArrayList<Path> finalPathArray : finalPaths) {
+								System.out.println("Checking ArrayList of paths");
+								
+		        				for (int i = 0; i < finalPathArray.size(); i++) {
+		        					System.out.println("Checking Path: finalPathArraySize = " + finalPathArray.size());
+		        					System.out.println("finalPaths = " + finalPaths.size());
+		        					sortedPath.add(finalPathArray.get(i));
+		        				}
+		        			}
+		        			
+		        			for (int i = 0; i < sortedPath.size(); i++) {
+		        				for (int j = i+1; j < sortedPath.size(); j++) {
+		    						if (sortedPath.get(i).getDuration() < sortedPath.get(j).getDuration()) {
+		            					System.out.println("Path " + sortedPath.get(i) + " (duration = " + sortedPath.get(i).getDuration() + ") is less than path " + sortedPath.get(j) + " (duration = " + sortedPath.get(j).getDuration() + ")");
+		    							
+		            					Path temp = new Path();
+		    							temp.setDuration(sortedPath.get(i).getDuration());
+		    							temp.setPath(sortedPath.get(i).getPath());
+		    							
+		    							sortedPath.get(i).setPath(sortedPath.get(j).getPath());
+		    							sortedPath.get(i).setDuration(sortedPath.get(j).getDuration());
+		    							
+		    							sortedPath.get(j).setPath(temp.getPath());
+		    							sortedPath.get(j).setDuration(temp.getDuration());
+		    						} else {
+		            					System.out.println("Path " + sortedPath.get(i) + " (duration = " + sortedPath.get(i).getDuration() + ") is more than path " + sortedPath.get(j) + " (duration = " + sortedPath.get(j).getDuration() + ")");
+		    						}
+		        				}
+		        			}
+		        			
+		        			//Outputting paths to console
+		        			System.out.println("Paths: ");
+		        			/*
+		        			for (ArrayList<Path> finalPathArray : finalPaths) {
+		        				for (Path finalPath : finalPathArray) {
+		        					System.out.println(finalPath.getPath());
+		        					System.out.println("Duration: " + finalPath.getDuration());
+		        				}
+		        			}*/
+		        			System.out.println("Paths: ");
+		        			for (Path path : sortedPath) {
+		        				System.out.println(path.getDuration());
+		        			}
+		        			
+		        			//Clear output before writing to it
+		        			ListArea.setText("");
+		        			
+		        			//If checkbox 'critical-path-only' is false
+		        			if (!criticalPathOnly) {
+		            			for (Path finalPath : sortedPath) {
+		        					ListArea.append("[");
+		        					for (int i = 0; i < finalPath.getPath().size(); i++) {
+		        						ListArea.append(finalPath.getPath().get(i).getName());
+		        						if (!(i == finalPath.getPath().size()-1))
+		        							ListArea.append(", ");
+		        					}
+		        					ListArea.append("]");
+		        					ListArea.append("\tDuration: " + finalPath.getDuration() + "\n");
+		        				}
+		        			} else {	//Critical path only is selected; only print the critical paths (i.e. path(s) with highest duration)
+		        				int criticalPathDuration = sortedPath.get(0).getDuration();	//Grab the first final Path's duration from the sorted paths
+		        				System.out.println("Critical Path Duration: " + criticalPathDuration);
+		        				ListArea.append("Critical Path(s):\n");
+		            			for (Path finalPath : sortedPath) {
+		            				if (finalPath.getDuration() == (criticalPathDuration)) {
+		            					ListArea.append("[");
+		            					for (int i = 0; i < finalPath.getPath().size(); i++) {		//For each final path
+		            						ListArea.append(finalPath.getPath().get(i).getName());	//Print out the name for each node in the final path
+		            						if (!(i == finalPath.getPath().size()-1))				//If we haven't reached the end of the list of nodes in the path
+		            							ListArea.append(", ");								//Add a comma for formatting and continue the for loop
+		            					}
+		            					ListArea.append("]");
+		            					ListArea.append("\tDuration: " + finalPath.getDuration() + "\n");
+		            				}
+		        				}
+		        			}
+		        			
+		        			
+		        			for (ArrayList<Path> finalPathArray : finalPaths) {
+								System.out.println("Resetting finalPaths");
+		        				for (int i = 0; i < finalPathArray.size(); i++) {
+		        					finalPathArray.remove(i);
+		        				}
+		        				finalPathArray.clear();
+		        			}
+		        			finalPaths.clear();
+		    			}
+						break;
+					case 1:
+						EDerrorLabel.setText("Please input a valid duration");
+						break;
+					case 2:
+						EDerrorLabel.setText("Please input a duration different from the duration you are trying to change");
+						break;
+					case 3:
+						EDerrorLabel.setText("Please input a valid name");
+						break;
+					}
+				}
 			}
 		});
 		ReProcessbutton.setFont(new Font("Tahoma", Font.BOLD, 15));
 		ReProcessbutton.setBounds(200, 325, 300, 35);
 		panel_2.add(ReProcessbutton);
 		
-		JLabel EDerrorLabel = new JLabel("");
+		/*JLabel EDerrorLabel = new JLabel("");
 		EDerrorLabel.setForeground(Color.RED);
 		EDerrorLabel.setFont(new Font("Tahoma", Font.BOLD, 13));
 		EDerrorLabel.setBounds(200, 300, 400, 20);
-		panel_2.add(EDerrorLabel);
+		panel_2.add(EDerrorLabel);*/
 		
 		JPanel panel_3 = new JPanel();
 		tabbedPane.addTab("Create Report", null, panel_3, null);
@@ -715,5 +898,62 @@ public class GUI {
 		} catch (Exception e) {
 			return false;
 		}
+	}
+	
+	
+	
+	
+	/**********************************************************************************************
+	 * 
+	 * 11/8/18
+	 * Created the backend for the RE-PROCESS button
+	 * Added changeNodeDuration() and changeDurationCheck() functions
+	 * Moved EDerrorList to before the ActionListener so it could actually be used
+	 * Moved sortedPath so it will function like a global for storing our most recent path lists
+	 * 
+	 *********************************************************************************************/
+	
+
+	public static void changeNodeDuration(ArrayList<Node> list, String nodeName, int newDuration) {
+		//Iterate through the list of Nodes
+		for(int i=0; i<list.size(); i++) {
+			//If the node you are looking for is found
+			if(list.get(i).getName().equals(nodeName)) {
+					list.get(i).setDuration(newDuration);
+					return;
+			}
+		}
+	}
+	
+	public static int changeDurationCheck(ArrayList<Node> list, String nodeName, int newDuration) {
+		int checkFlag = 3;
+		/*****************************************************************
+		 0 = no error
+		 1 = newDuration either 0 or a negative number; i.e. a non valid input
+		 2 = newDuration is the same as the current duration
+		 3 = nodeName does not exist in the nodeList
+		 ****************************************************************/
+		
+		if(newDuration < 1) {
+			//set checkFlag to throw an error message asking user to re-input a valid duration
+			checkFlag = 1;
+		}
+		else {
+			//Iterate through list
+			for(int i=0; i<list.size(); i++) {
+				//if the node has been found
+				if(list.get(i).getName().equals(nodeName)) {
+					//if the newDuration is the same as the current
+					if(list.get(i).getDuration() == newDuration) {
+						checkFlag = 2;
+					}
+					else {
+						checkFlag = 0;
+					}
+				}
+			}
+		}
+		
+		return checkFlag;
 	}
 }
