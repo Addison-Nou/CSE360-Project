@@ -15,7 +15,12 @@ import javax.swing.JScrollBar;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
@@ -31,13 +36,13 @@ public class GUI {
 	private JTextField PredecessorField;
 	private JTextField ActivityField;
 	private JTextField DurationField;
-	private Boolean criticalPathOnly=false;
+	private Boolean criticalPathOnly = false;
 	ArrayList<Node> Nodelist = new ArrayList<Node>();
 	private String nodeNameCheck = "";
 	private int nodeDurationCheck = 0;
 	ArrayList<Path> sortedPath = new ArrayList<Path>();
-	
-	//Creating list of final paths
+
+	// Creating list of final paths
 	ArrayList<ArrayList<Path>> finalPaths = new ArrayList<ArrayList<Path>>();
 	private JTextField chgDurField;
 	private JTextField NewDurField;
@@ -802,95 +807,145 @@ public class GUI {
 		AboutCR.setFont(new Font("Tahoma", Font.ITALIC, 12));
 		panel_3.add(AboutCR);
 		
+		/*The following block of code determines the logic behind pressing the "Generate Report" button on the GUI.
+		 * There are 4 distinct functions for this button:
+		 * 1. The report will be named "user_input.txt" based on what the user enters
+		 * 2. The report will print a line taken from the local date and time
+		 * 3. The report will contain the list of ordered Activities and associated durations
+		 * 4. The report will contain the list of Paths and their associated total durations
+		 * The file that is written can be found in the same directory that this code runs in.
+		 */
 		JButton reportGenbutton = new JButton("Generate Report");
 		reportGenbutton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {			//Action Listener for Generate Report Button TODO backend
-			}
-		});
+			public void actionPerformed(ActionEvent e) {			//Action Listener for Generate Report Button TODO backend 
+				String reportName = textField.getText().toString().trim();
+				File fileName = new File(reportName + ".txt");
+				PrintWriter report; //PrintWriter usage over FileWriter due to inbuilt support for println/print functions
+				try {
+					report = new PrintWriter(fileName);
+					
+					//Prints out the name of report as defined by the user
+					report.println("--REPORT TITLE: " + fileName);
+					
+					//Prints out the Local Current date and time at the moment of report generation
+					report.println("--DATE & TIME OF REPORT CREATION: " + LocalDateTime.now() + "--");
+					
+					//Prints out the list of activities in alphanumeric order with associated durations
+					report.println("--ALPHANUMERICALLY ORDERED ACTIVITIES & CURRENT DURATIONS: ");
+					Collections.sort(Nodelist); //Sorts based on natural (alphanumeric) order. Following for loop will iterate updated Nodelist
+					for (Node finalNodes : Nodelist) {
+						report.print("Activity: [");//Formatting
+						report.print(finalNodes.getName()); //Gets the node at that iteration and prints name
+						report.print("]");//Formatting
+						report.print("\tCurrent Duration: " + finalNodes.getDuration() + "\n"); //gets current duration to print
+					}
+			
+					//Prints out the Paths with their activity names and associated durations
+					report.println("--PATHS WITH ACTIVITY NAMES AND DURATIONS--");
+					//The following nested for loop block is from the above sortedPath method to display to GUI Output Pane
+					//Copied and adapted to be exported to the Report file.
+					for (Path finalPath : sortedPath) {
+    					report.print("Path: [");
+    					for (int i = 0; i < finalPath.getPath().size(); i++) {
+    						report.print(finalPath.getPath().get(i).getName());
+    						if (!(i == finalPath.getPath().size()-1))
+    							report.print(", ");
+    					}
+    					report.print("]");
+    					report.print("\tTotal Duration: " + finalPath.getDuration() + "\n");
+				/*	for (Path path : sortedPath) {
+						report.println(path.getPath()); Includes the hash code names? Most likely not needed
+						report.println(path.getDuration());
+				}*/
+					report.close();}
+				} catch (FileNotFoundException e1) {
+					e1.printStackTrace();
+				}
+			}});
 		reportGenbutton.setFont(new Font("Tahoma", Font.BOLD, 15));
 		reportGenbutton.setBounds(200, 325, 300, 35);
 		panel_3.add(reportGenbutton);
 		
 		textField = new JTextField();
 		textField.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		textField.setColumns(10);
-		textField.setBounds(200, 150, 300, 25);
-		panel_3.add(textField);
-		
-		JLabel reportNamelabel = new JLabel("Report Name");
-		reportNamelabel.setFont(new Font("Tahoma", Font.BOLD, 13));
-		reportNamelabel.setBounds(200, 110, 200, 25);
-		panel_3.add(reportNamelabel);
-		
-		JLabel CRerrorLabel = new JLabel("");
-		CRerrorLabel.setForeground(Color.RED);
-		CRerrorLabel.setFont(new Font("Tahoma", Font.BOLD, 13));
-		CRerrorLabel.setBounds(200, 300, 400, 20);
-		panel_3.add(CRerrorLabel);
-		
-		
+
+	public void actionPerformed(ActionEvent e) {
+	}});textField.setColumns(10);textField.setBounds(200,150,300,25);panel_3.add(textField);
+
+	JLabel reportNamelabel = new JLabel(
+			"Report Name");reportNamelabel.setFont(new Font("Tahoma",Font.BOLD,13));reportNamelabel.setBounds(200,110,200,25);panel_3.add(reportNamelabel);
+
+	JLabel CRerrorLabel = new JLabel(
+			"");CRerrorLabel.setForeground(Color.RED);CRerrorLabel.setFont(new Font("Tahoma",Font.BOLD,13));CRerrorLabel.setBounds(200,300,400,20);panel_3.add(CRerrorLabel);
+
 	}
-	
-    public static void FindPaths(Node nodeDependents, Path visitedNodes, ArrayList<Path> finalPaths) {
-    	
-    	//System.out.println("Running FindPaths");
-    	//Look at the node's dependents
-    	ArrayList<Node> dependents = nodeDependents.getDependents();
-    	//System.out.println("Dependents of nodeDependent: " + nodeDependents.getDependents());
-    	
-    	//Check each dependent in the dependents nodelist and see if it matches our visited Nodes
-    	
-    	//For each 'dependent' node in 'dependents' nodelist
-    	for (Node dependent : dependents) {
-    		//System.out.println("Looking at: " + nodeDependents.getName() + "'s dependent" + dependent.getName());
-    		
-    		//Get the dependencies of the 'dependent' node
-    		ArrayList<String> dependencies = dependent.getDependencies();
-    		
-    		//For each dependency, check to see if it's contained in the dependency string list
-    		for (String d : dependencies) {
-    			
-        		//If one of the node's dependencies don't match our previously visited nodes, then continue checking the dependents for their dependencies
-        		if (!visitedNodes.getPath().contains(d)) {
-        			continue;
-        		}
-    		}
-    		
-    		//If all the nodes match, then clone the path and insert the node into the visitedNodes for recursive use
-    		ArrayList<Node> clone = (ArrayList<Node>) visitedNodes.getPath().clone();	//cloning the path
-    		clone.add(dependent);	//adding the path to the clone
-    		Path newPath = new Path(clone, 0);	//Creating new path to use for recursion
-    		
-    		//Recursively call the function to check the added node's dependents against the new visitedNodes' path
-    		FindPaths(dependent, newPath, finalPaths);
-    		
-    	}
-    	
-    	//If there are no dependents, then the path has ended. Add the path to the final Path list
-    	if (dependents.size() == 0) {
-    		finalPaths.add(visitedNodes);
-    	}
-    }
-    
-    public static ArrayList<Node> SearchForHeads(ArrayList<Node> list) {
-    	
-    	ArrayList<Node> heads = new ArrayList<Node>();
-    	
-    	//Iterate through the ArrayList of all nodes
-    	for(int i=0; i<list.size(); i++) {
-    		
-    		//If the dependency of the node is empty (the node is a head), then add the node to the return arraylist
-    		if(list.get(i).getDependencies().isEmpty()) {
-    			heads.add(list.get(i));
-    		}
-    	}
-    	
-    	return heads;
-    }
-    
+
+	public static void FindPaths(Node nodeDependents, Path visitedNodes, ArrayList<Path> finalPaths) {
+
+		// System.out.println("Running FindPaths");
+		// Look at the node's dependents
+		ArrayList<Node> dependents = nodeDependents.getDependents();
+		// System.out.println("Dependents of nodeDependent: " +
+		// nodeDependents.getDependents());
+
+		// Check each dependent in the dependents nodelist and see if it matches our
+		// visited Nodes
+
+		// For each 'dependent' node in 'dependents' nodelist
+		for (Node dependent : dependents) {
+			// System.out.println("Looking at: " + nodeDependents.getName() + "'s dependent"
+			// + dependent.getName());
+
+			// Get the dependencies of the 'dependent' node
+			ArrayList<String> dependencies = dependent.getDependencies();
+
+			// For each dependency, check to see if it's contained in the dependency string
+			// list
+			for (String d : dependencies) {
+
+				// If one of the node's dependencies don't match our previously visited nodes,
+				// then continue checking the dependents for their dependencies
+				if (!visitedNodes.getPath().contains(d)) {
+					continue;
+				}
+			}
+
+			// If all the nodes match, then clone the path and insert the node into the
+			// visitedNodes for recursive use
+			ArrayList<Node> clone = (ArrayList<Node>) visitedNodes.getPath().clone(); // cloning the path
+			clone.add(dependent); // adding the path to the clone
+			Path newPath = new Path(clone, 0); // Creating new path to use for recursion
+
+			// Recursively call the function to check the added node's dependents against
+			// the new visitedNodes' path
+			FindPaths(dependent, newPath, finalPaths);
+
+		}
+
+		// If there are no dependents, then the path has ended. Add the path to the
+		// final Path list
+		if (dependents.size() == 0) {
+			finalPaths.add(visitedNodes);
+		}
+	}
+
+	public static ArrayList<Node> SearchForHeads(ArrayList<Node> list) {
+
+		ArrayList<Node> heads = new ArrayList<Node>();
+
+		// Iterate through the ArrayList of all nodes
+		for (int i = 0; i < list.size(); i++) {
+
+			// If the dependency of the node is empty (the node is a head), then add the
+			// node to the return arraylist
+			if (list.get(i).getDependencies().isEmpty()) {
+				heads.add(list.get(i));
+			}
+		}
+
+		return heads;
+	}
+
 	public boolean isInteger(String input) {
 		try {
 			Integer.parseInt(input);
@@ -899,61 +954,54 @@ public class GUI {
 			return false;
 		}
 	}
-	
-	
-	
-	
+
 	/**********************************************************************************************
 	 * 
-	 * 11/8/18
-	 * Created the backend for the RE-PROCESS button
-	 * Added changeNodeDuration() and changeDurationCheck() functions
-	 * Moved EDerrorList to before the ActionListener so it could actually be used
-	 * Moved sortedPath so it will function like a global for storing our most recent path lists
+	 * 11/8/18 Created the backend for the RE-PROCESS button Added
+	 * changeNodeDuration() and changeDurationCheck() functions Moved EDerrorList to
+	 * before the ActionListener so it could actually be used Moved sortedPath so it
+	 * will function like a global for storing our most recent path lists
 	 * 
 	 *********************************************************************************************/
-	
 
 	public static void changeNodeDuration(ArrayList<Node> list, String nodeName, int newDuration) {
-		//Iterate through the list of Nodes
-		for(int i=0; i<list.size(); i++) {
-			//If the node you are looking for is found
-			if(list.get(i).getName().equals(nodeName)) {
-					list.get(i).setDuration(newDuration);
-					return;
+		// Iterate through the list of Nodes
+		for (int i = 0; i < list.size(); i++) {
+			// If the node you are looking for is found
+			if (list.get(i).getName().equals(nodeName)) {
+				list.get(i).setDuration(newDuration);
+				return;
 			}
 		}
 	}
-	
+
 	public static int changeDurationCheck(ArrayList<Node> list, String nodeName, int newDuration) {
 		int checkFlag = 3;
 		/*****************************************************************
-		 0 = no error
-		 1 = newDuration either 0 or a negative number; i.e. a non valid input
-		 2 = newDuration is the same as the current duration
-		 3 = nodeName does not exist in the nodeList
+		 * 0 = no error 1 = newDuration either 0 or a negative number; i.e. a non valid
+		 * input 2 = newDuration is the same as the current duration 3 = nodeName does
+		 * not exist in the nodeList
 		 ****************************************************************/
-		
-		if(newDuration < 1) {
-			//set checkFlag to throw an error message asking user to re-input a valid duration
+
+		if (newDuration < 1) {
+			// set checkFlag to throw an error message asking user to re-input a valid
+			// duration
 			checkFlag = 1;
-		}
-		else {
-			//Iterate through list
-			for(int i=0; i<list.size(); i++) {
-				//if the node has been found
-				if(list.get(i).getName().equals(nodeName)) {
-					//if the newDuration is the same as the current
-					if(list.get(i).getDuration() == newDuration) {
+		} else {
+			// Iterate through list
+			for (int i = 0; i < list.size(); i++) {
+				// if the node has been found
+				if (list.get(i).getName().equals(nodeName)) {
+					// if the newDuration is the same as the current
+					if (list.get(i).getDuration() == newDuration) {
 						checkFlag = 2;
-					}
-					else {
+					} else {
 						checkFlag = 0;
 					}
 				}
 			}
 		}
-		
+
 		return checkFlag;
 	}
 }

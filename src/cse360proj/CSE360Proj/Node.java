@@ -2,7 +2,7 @@ package cse360proj.CSE360Proj;
 
 import java.util.ArrayList;
 
-public class Node {
+public class Node implements Comparable<Node>{
 
 	String name;
 	int duration;
@@ -66,5 +66,9 @@ public class Node {
 	
 	public void addDependent(Node dependent) {
 		this.dependents.add(dependent);
+	}
+
+	public int compareTo(Node compare) { //Needed for comparison to sort nodes Alphanumerically.
+		return this.name.compareTo(compare.name);
 	}
 }
