@@ -79,11 +79,16 @@ public class GUI {
 			public void actionPerformed(ActionEvent e) {         	//this is the button(action) that corresponds with the "Help" Button 
 				JOptionPane.showMessageDialog(null, 
 						"\t\tHELP\t\t\n"
-						+ "The Application can be exited by the red X in the upper right corner\n"
-						+ "The \"Add Node\" button  takes the Activity Name and Duration and Creates a new node\n"
-						+ "The \"Process\" button creates paths based on existing nodes\n"
-						+ "The \"Add Predecessor\" button adds a predecessor to the current node\n"
-						+ "The \"Restart\" button resets the application to a blank slate");    	//help copy pasta
+		+ "The Application can be exited by the red X in the upper right corner\n"
+		+ "The \"Add Predecessor\" button adds a predecessor to the current node\n"
+		+ "The \"Add Node\" button  takes the Activity Name and Duration and creates a new node\n"
+		+ "The \"Process\" button creates paths based on existing nodes\n"
+		+ "The \"Critical Path Only\" Checkbox limits the output to only the critical path\n"
+		+ "The \"Edit Duration\" tab contains functionality to change node durations\n"
+		+ "On the Edit Duration tab The \"Re-Process\" button sets the designated node to the new duration\n"
+		+ "The \"Generate Report\" tab contains functionality to create a text file of the output\n"
+		+ "On the Generate Report tab The \"Generate Report\" button creates an output file with the name input into the text field\n"
+		+ "The \"Restart\" button resets the application to a blank slate");    	//help copy pasta
 			}                                                    	//TODO add filler text to the Pop-up as the button action
 		});
 		HelpInput.setFont(new Font("Tahoma", Font.ITALIC, 12));
@@ -488,11 +493,16 @@ public class GUI {
 			public void actionPerformed(ActionEvent e) {         	//this is the button(action) that corresponds with the "Help" Button
 				JOptionPane.showMessageDialog(null, 
 						"\t\tHELP\t\t\n"
-						+ "The Application can be exited by the red X in the upper right corner\n"
-						+ "The \"Add Predecessor\" button adds a predecessor to the current node\n"
-						+ "The \"Add Node\" button  takes the Activity Name and Duration and creates a new node\n"
-						+ "The \"Process\" button creates paths based on existing nodes\n"
-						+ "The \"Restart\" button resets the application to a blank slate");    	//help copy pasta
+		+ "The Application can be exited by the red X in the upper right corner\n"
+		+ "The \"Add Predecessor\" button adds a predecessor to the current node\n"
+		+ "The \"Add Node\" button  takes the Activity Name and Duration and creates a new node\n"
+		+ "The \"Process\" button creates paths based on existing nodes\n"
+		+ "The \"Critical Path Only\" Checkbox limits the output to only the critical path\n"
+		+ "The \"Edit Duration\" tab contains functionality to change node durations\n"
+		+ "On the Edit Duration tab The \"Re-Process\" button sets the designated node to the new duration\n"
+		+ "The \"Generate Report\" tab contains functionality to create a text file of the output\n"
+		+ "On the Generate Report tab The \"Generate Report\" button creates an output file with the name input into the text field\n"
+		+ "The \"Restart\" button resets the application to a blank slate");    	//help copy pasta
 			}                                                    	//TODO add filler text to the Pop-up as the button action
 		});
 		HelpOutput.setFont(new Font("Tahoma", Font.ITALIC, 12));
@@ -523,11 +533,16 @@ public class GUI {
 			public void actionPerformed(ActionEvent e) {         	//this is the button(action) that corresponds with the "Help" Button
 				JOptionPane.showMessageDialog(null, 
 						"\t\tHELP\t\t\n"
-						+ "The Application can be exited by the red X in the upper right corner\n"
-						+ "The \"Add Predecessor\" button adds a predecessor to the current node\n"
-						+ "The \"Add Node\" button  takes the Activity Name and Duration and creates a new node\n"
-						+ "The \"Process\" button creates paths based on existing nodes\n"
-						+ "The \"Restart\" button resets the application to a blank slate");    	//help copy pasta
+		+ "The Application can be exited by the red X in the upper right corner\n"
+		+ "The \"Add Predecessor\" button adds a predecessor to the current node\n"
+		+ "The \"Add Node\" button  takes the Activity Name and Duration and creates a new node\n"
+		+ "The \"Process\" button creates paths based on existing nodes\n"
+		+ "The \"Critical Path Only\" Checkbox limits the output to only the critical path\n"
+		+ "The \"Edit Duration\" tab contains functionality to change node durations\n"
+		+ "On the Edit Duration tab The \"Re-Process\" button sets the designated node to the new duration\n"
+		+ "The \"Generate Report\" tab contains functionality to create a text file of the output\n"
+		+ "On the Generate Report tab The \"Generate Report\" button creates an output file with the name input into the text field\n"
+		+ "The \"Restart\" button resets the application to a blank slate");    	//help copy pasta
 			}                                                    	//TODO add filler text to the Pop-up as the button action
 		});
 		HelpED.setBounds(565, -1, 62, 23);
@@ -781,11 +796,16 @@ public class GUI {
 			public void actionPerformed(ActionEvent e) {         	//this is the button(action) that corresponds with the "Help" Button
 				JOptionPane.showMessageDialog(null, 
 						"\t\tHELP\t\t\n"
-						+ "The Application can be exited by the red X in the upper right corner\n"
-						+ "The \"Add Predecessor\" button adds a predecessor to the current node\n"
-						+ "The \"Add Node\" button  takes the Activity Name and Duration and creates a new node\n"
-						+ "The \"Process\" button creates paths based on existing nodes\n"
-						+ "The \"Restart\" button resets the application to a blank slate");    	//help copy pasta
+		+ "The Application can be exited by the red X in the upper right corner\n"
+		+ "The \"Add Predecessor\" button adds a predecessor to the current node\n"
+		+ "The \"Add Node\" button  takes the Activity Name and Duration and creates a new node\n"
+		+ "The \"Process\" button creates paths based on existing nodes\n"
+		+ "The \"Critical Path Only\" Checkbox limits the output to only the critical path\n"
+		+ "The \"Edit Duration\" tab contains functionality to change node durations\n"
+		+ "On the Edit Duration tab The \"Re-Process\" button sets the designated node to the new duration\n"
+		+ "The \"Generate Report\" tab contains functionality to create a text file of the output\n"
+		+ "On the Generate Report tab The \"Generate Report\" button creates an output file with the name input into the text field\n"
+		+ "The \"Restart\" button resets the application to a blank slate");    	//help copy pasta
 			}                                                    	//TODO add filler text to the Pop-up as the button action
 		});
 		HelpCR.setBounds(565, -1, 62, 23);
