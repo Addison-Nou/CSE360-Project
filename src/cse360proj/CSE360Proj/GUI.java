@@ -606,7 +606,6 @@ public class GUI {
 					EDerrorLabel.setText("Please input a valid duration");
 				}
 				else {
-					sortedPath.clear();
 					nodeNameCheck = chgDurField.getText();
 					nodeDurationCheck = Integer.parseInt(NewDurField.getText());
 					int checkFlag = changeDurationCheck(Nodelist, nodeNameCheck, nodeDurationCheck);
@@ -620,6 +619,7 @@ public class GUI {
 					
 					switch(checkFlag) {
 					case 0:
+						sortedPath.clear();
 						chgDurField.setText("");
 						NewDurField.setText("");
 						EDerrorLabel.setText("");
@@ -877,7 +877,10 @@ public class GUI {
 						report.println(path.getPath()); Includes the hash code names? Most likely not needed
 						report.println(path.getDuration());
 				}*/
-					report.close();}
+					}
+				
+					report.close();
+					
 				} catch (FileNotFoundException e1) {
 					e1.printStackTrace();
 				}
