@@ -1,9 +1,0 @@
---REPORT TITLE: potato.txt
---DATE & TIME OF REPORT CREATION: 2018-11-13T19:26:59.031--
---ALPHANUMERICALLY ORDERED ACTIVITIES & CURRENT DURATIONS: 
-Activity: [a]	Current Duration: 1
-Activity: [b]	Current Duration: 2
-Activity: [c]	Current Duration: 4
---PATHS WITH ACTIVITY NAMES AND DURATIONS--
-Path: [a, c]	Total Duration: 5
-Path: [a, b]	Total Duration: 3
